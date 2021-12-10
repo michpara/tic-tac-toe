@@ -15,6 +15,7 @@ const GameBoard = (() => {
 			for(var col = 0; col < cols; col++){
 				var cell = document.createElement("div");
 				cell.innerHTML = gameboard[col][row];
+				cell.id = [row, col];
 				cell.setAttribute("class", "cell");
 				gameboardDiv.appendChild(cell);
 
@@ -24,7 +25,13 @@ const GameBoard = (() => {
 		}
 	}
 
-	return {getGameBoard, displayGameBoard};
+	const play = (symbol, row, col) => {
+		gameboard[col][row] = symbol;
+		displayGameBoard();
+		Game.listen();
+	}
+
+	return {getGameBoard, displayGameBoard, play};
 })();
 
 const Player = (symbol) => {
@@ -33,7 +40,20 @@ const Player = (symbol) => {
   return {getSymbol};
 };
 
-const Game = ((player1, player2, gameboard) => {
+const Game = (() => {
+	const player1 = Player("X");
+	const player2 = Player("O");
+	GameBoard.displayGameBoard();
 
+	const listen = () => {
+		const cells = document.getElementsByClassName("cell");
+		Array.from(cells).forEach((cell) => {
+			cell.addEventListener("click", function(){
+				GameBoard.play(player1.getSymbol, parseInt(cell.id[0]), parseInt(cell.id[2]))
+			})
+		});
+	}
+	return {listen};
 })();
 
+Game.listen();
