@@ -1,4 +1,4 @@
-const GameBoard = () => {
+const GameBoard = (() => {
 	let size = 3;
 	let gamebaord = new Array(size);
 	for(var i = 0; i<size; i++){
@@ -6,15 +6,15 @@ const GameBoard = () => {
 	}
 	const getGameBoard = () => gameboard;
 
-	return {getGameBoard}
-}
+	return {getGameBoard};
+})();
 
 const Player = (symbol) => {
   const getSymbol = () => symbol;
 
-  return {getSymbol}
+  return {getSymbol};
 };
 
-const Game = (player1, player2, gameboard) => {
-	
-}
+const Game = ((player1, player2, gameboard) => {
+
+})();
