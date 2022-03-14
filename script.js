@@ -27,12 +27,13 @@ const GameBoard = (() => {
 		gameboard[row][col] = symbol;
 		displayGameBoard();
 		if(GameBoard.gameOver(symbol, row, col) == 0){
-			console.log("The game is over! " + player.getName() + " is the winner!");
+			document.getElementById("winner").innerHTML = ("The game is over! " + player.getName() + " is the winner!");
 		} else if (GameBoard.gameOver(symbol, row, col) == 1){
-			console.log("It is a draw!")
+			document.getElementById("winner").innerHTML = ("It is a draw!")
+		} else {
+			Game.listen();
+			Game.increaseMoveCount();
 		}
-		Game.listen();
-		Game.increaseMoveCount();
 	};
 
 	const gameOver = (symbol, row, col) => {
@@ -81,7 +82,11 @@ const GameBoard = (() => {
 		}
 	}
 
-	return {getGameBoard, displayGameBoard, play, gameOver};
+	const clearBoard = () => {
+		gameboard = [["", "", ""], ["", "", ""], ["", "", ""]];
+	}
+
+	return {getGameBoard, displayGameBoard, play, gameOver, clearBoard};
 })();
 
 const Player = (symbol, name) => {
@@ -91,8 +96,6 @@ const Player = (symbol, name) => {
 };
 
 const Game = (() => {
-	const player1 = Player("X", "Michelle");
-	const player2 = Player("O", "Carmen");
 
 	let turn = false;
 
@@ -109,6 +112,12 @@ const Game = (() => {
 	};
 
 	const listen = () => {
+		player1Name = document.getElementById("player1").value;
+		player2Name = document.getElementById("player2").value;
+
+		const player1 = Player("X", player1Name);
+		const player2 = Player("O", player2Name);
+		
 		const cells = document.getElementsByClassName("cell");
 			if(turn){
 				player = player2;
@@ -123,7 +132,24 @@ const Game = (() => {
 			})
 		});
 	};
-	return {listen, moveCount, getMoveCount, increaseMoveCount};
+
+	const reset = () => {
+		window.location.reload();
+	}
+	return {listen, moveCount, getMoveCount, increaseMoveCount, reset};
 })();
 
-Game.listen();
+document.getElementById("start").addEventListener("click", function(){
+	player1Name = document.getElementById("player1").value;
+	player2Name = document.getElementById("player2").value;
+
+	if(player1Name === '' || player2Name === ''){
+		alert("Please input your names!");
+	} else {
+		Game.listen();
+	}
+})
+
+document.getElementById("reset").addEventListener("click", function(){
+	Game.reset();
+})
