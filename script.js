@@ -11,7 +11,11 @@ const GameBoard = (() => {
 		for(var row = 0; row < rows; row++){
 			for(var col = 0; col < cols; col++){
 				var cell = document.createElement("div");
-				cell.innerHTML = gameboard[row][col];
+				if(gameboard[row][col] === ""){
+					cell.innerHTML = gameboard[row][col];
+				} else {
+					cell.appendChild(gameboard[row][col])
+				}
 				cell.id = [row, col];
 				cell.setAttribute("class", "cell");
 				gameboardDiv.appendChild(cell);
@@ -37,10 +41,8 @@ const GameBoard = (() => {
 	};
 
 	const gameOver = (symbol, row, col) => {
-
 		for(var i = 0; i<size; i++){
-			if(gameboard[row][i] != symbol){
-				console.log(symbol)
+			if(gameboard[row][i].alt != symbol.alt){
 				break;
 			}
 			if(i == size-1){
@@ -49,7 +51,7 @@ const GameBoard = (() => {
 		}
 
 		for(var i = 0; i<size; i++){
-			if(gameboard[i][col] != symbol){
+			if(gameboard[i][col].alt != symbol.alt){
 				break;
 			}
 			if(i == size-1){
@@ -59,7 +61,7 @@ const GameBoard = (() => {
 
 		if(row == col){
 			for(var i = 0; i<size; i++){
-				if(gameboard[i][i] != symbol){
+				if(gameboard[i][i].alt != symbol.alt){
 					break;
 				}
 				if(i == size-1){
@@ -69,7 +71,7 @@ const GameBoard = (() => {
 		}
 		if(row + col == size-1){
 			for(var i = 0; i<size; i++){
-				if(gameboard[i][size-1-i] != symbol){
+				if(gameboard[i][size-1-i].alt != symbol.alt){
 					break;
 				}
 				if(i == size-1){
@@ -115,8 +117,19 @@ const Game = (() => {
 		player1Name = document.getElementById("player1").value;
 		player2Name = document.getElementById("player2").value;
 
-		const player1 = Player("X", player1Name);
-		const player2 = Player("O", player2Name);
+		symbolX = document.createElement("img");
+		symbolX.src="images/tic-tac-toe-x.png"
+		symbolX.width = 100;
+		symbolX.alt = "x"
+
+		symbolO = document.createElement("img");
+		symbolO.src="images/tic-tac-toe-o.png"
+		symbolO.width = 90;
+		symbolO.alt = "o"
+
+
+		const player1 = Player(symbolX, player1Name);
+		const player2 = Player(symbolO, player2Name);
 		
 		const cells = document.getElementsByClassName("cell");
 			if(turn){
@@ -128,7 +141,9 @@ const Game = (() => {
 			}
 		Array.from(cells).forEach((cell) => {
 			cell.addEventListener("click", function(){
-				GameBoard.play(player, parseInt(cell.id[0]), parseInt(cell.id[2]))
+				if(GameBoard.getGameBoard()[cell.id[0]][cell.id[2]] === ""){
+					GameBoard.play(player, parseInt(cell.id[0]), parseInt(cell.id[2]))
+				}
 			})
 		});
 	};
